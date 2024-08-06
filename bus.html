@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Pass Application</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bus Pass Application</h1>
+        <form id="applicationForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="education">Education:</label>
+            <select id="education" name="education" required>
+                <option value="">Select Education</option>
+                <option value="elementary">Elementary</option>
+                <option value="primary">Primary</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="degree">Degree</option>
+                <option value="btech">BTech</option>
+            </select>
+
+            <div id="educationDetails" class="hidden">
+                <label for="educationLevel">Education Level:</label>
+                <select id="educationLevel" name="educationLevel" required>
+                    <option value="">Select Level</option>
+                </select>
+            </div>
+
+            <label for="contact">Preferred Contact:</label>
+            <select id="contact" name="contact" required>
+                <option value="">Select Contact Type</option>
+                <option value="email">Email</option>
+                <option value="phone">Phone Number</option>
+            </select>
+
+            <div id="contactDetails" class="hidden">
+                <label for="contactValue" id="contactLabel"></label>
+                <input type="text" id="contactValue" name="contactValue" required>
+                <span id="contactValidationMessage" class="hidden"></span>
+            </div>
+
+            <label for="institutionName">Name of the Institution:</label>
+            <input type="text" id="institutionName" name="institutionName" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('education').addEventListener('change', function() {
+            const educationLevel = document.getElementById('educationLevel');
+            const educationDetails = document.getElementById('educationDetails');
+            educationLevel.innerHTML = ''; // Clear existing options
+
+            const education = this.value;
+            let options = [];
+
+            switch (education) {
+                case 'elementary':
+                    options = ['1', '2', '3', '4', '5'];
+                    break;
+                case 'primary':
+                    options = ['6', '7', '8', '9', '10'];
+                    break;
+                case 'intermediate':
+                    options = ['1st Year', '2nd Year'];
+                    break;
+                case 'degree':
+                    options = ['1st Year', '2nd Year', '3rd Year'];
+                    break;
+                case 'btech':
+                    options = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
+                    break;
+                default:
+                    options = [];
+            }
+
+            if (options.length > 0) {
+                options.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option;
+                    opt.textContent = option;
+                    educationLevel.appendChild(opt);
+                });
+                educationDetails.classList.remove('hidden');
+            } else {
+                educationDetails.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('contact').addEventListener('change', function() {
+            const contactValue = document.getElementById('contactValue');
+            const contactLabel = document.getElementById('contactLabel');
+            const contactDetails = document.getElementById('contactDetails');
+
+            if (this.value === 'email') {
+                contactLabel.textContent = 'Email:';
+                contactValue.type = 'email';
+                contactDetails.classList.remove('hidden');
+            } else if (this.value === 'phone') {
+                contactLabel.textContent = 'Phone Number:';
+                contactValue.type = 'tel';
+                contactDetails.classList.remove('hidden');
+            } else {
+                contactDetails.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('applicationForm').addEventListener('submit', function(event) {
+            const contactType = document.getElementById('contact').value;
+            const contactValue = document.getElementById('contactValue').value;
+            const contactValidationMessage = document.getElementById('contactValidationMessage');
+
+            contactValidationMessage.classList.add('hidden'); // Hide message initially
+
+            if (contactType === 'phone' && !/^\d{10}$/.test(contactValue)) {
+                event.preventDefault();
+                contactValidationMessage.textContent = 'Please enter a valid 10-digit phone number.';
+                contactValidationMessage.classList.remove('hidden');
+            } else if (contactType === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactValue)) {
+                event.preventDefault();
+                contactValidationMessage.textContent = 'Please enter a valid email address.';
+                contactValidationMessage.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
